@@ -1,54 +1,54 @@
 /* ============================================================================
-* Copyright (c) 2009-2016 BlueQuartz Software, LLC
-*
-* Redistribution and use in source and binary forms, with or without modification,
-* are permitted provided that the following conditions are met:
-*
-* Redistributions of source code must retain the above copyright notice, this
-* list of conditions and the following disclaimer.
-*
-* Redistributions in binary form must reproduce the above copyright notice, this
-* list of conditions and the following disclaimer in the documentation and/or
-* other materials provided with the distribution.
-*
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
-* contributors may be used to endorse or promote products derived from this software
-* without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*
-* The code contained herein was partially funded by the followig contracts:
-*    United States Air Force Prime Contract FA8650-07-D-5800
-*    United States Air Force Prime Contract FA8650-10-D-5210
-*    United States Prime Contract Navy N00173-07-C-2068
-*
-* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+ * Copyright (c) 2009-2016 BlueQuartz Software, LLC
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+ * contributors may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The code contained herein was partially funded by the followig contracts:
+ *    United States Air Force Prime Contract FA8650-07-D-5800
+ *    United States Air Force Prime Contract FA8650-10-D-5210
+ *    United States Prime Contract Navy N00173-07-C-2068
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "FeatureInfoReader.h"
 
+#include <QtCore/QFileInfo>
 #include <fstream>
 #include <thread>
-#include <QtCore/QFileInfo>
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
-#include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 
 #include "IO/IOConstants.h"
 #include "IO/IOVersion.h"
@@ -67,7 +67,8 @@ FeatureInfoReader::FeatureInfoReader()
 , m_CellEulerAnglesArrayName(SIMPL::CellData::EulerAngles)
 , m_FeaturePhasesArrayName(SIMPL::FeatureData::Phases)
 , m_FeatureEulerAnglesArrayName(SIMPL::FeatureData::EulerAngles)
-, m_Delimiter(0)
+, m_DelimiterChoice(SIMPL::DelimiterTypes::Type::Comma)
+, m_Delimiter(',')
 {
 }
 
@@ -119,7 +120,7 @@ void FeatureInfoReader::setupFilterParameters()
     choices.push_back("Tab");
     choices.push_back("Space");
     // Create the Choice Filter Parameter and add it to the list of parameters
-    parameters.push_back(SIMPL_NEW_CHOICE_FP("Delimiter", Delimiter, FilterParameter::Parameter, FeatureInfoReader, choices, false));
+    parameters.push_back(SIMPL_NEW_CHOICE_FP("Delimiter", DelimiterChoiceInt, FilterParameter::Parameter, FeatureInfoReader, choices, false));
   }
 
   setFilterParameters(parameters);
@@ -155,8 +156,8 @@ void FeatureInfoReader::updateFeatureInstancePointers()
   if(nullptr != m_FeaturePhasesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
-  }                                                   /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(nullptr != m_FeatureEulerAnglesPtr.lock())       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  }                                             /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(nullptr != m_FeatureEulerAnglesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_FeatureEulerAngles = m_FeatureEulerAnglesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -220,8 +221,8 @@ void FeatureInfoReader::dataCheck()
   {
     tempPath.update(m_FeatureIdsArrayPath.getDataContainerName(), m_FeatureIdsArrayPath.getAttributeMatrixName(), getCellPhasesArrayName());
     m_CellPhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
-        this, tempPath, 0, cDims);              /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != m_CellPhasesPtr.lock())       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+        this, tempPath, 0, cDims);        /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if(nullptr != m_CellPhasesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
       m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -229,8 +230,8 @@ void FeatureInfoReader::dataCheck()
     cDims[0] = 3;
     tempPath.update(m_FeatureIdsArrayPath.getDataContainerName(), m_FeatureIdsArrayPath.getAttributeMatrixName(), getCellEulerAnglesArrayName());
     m_CellEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
-        this, tempPath, 0, cDims);                   /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != m_CellEulerAnglesPtr.lock())       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+        this, tempPath, 0, cDims);             /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if(nullptr != m_CellEulerAnglesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
       m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -239,8 +240,8 @@ void FeatureInfoReader::dataCheck()
   cDims[0] = 1;
   tempPath.update(m_FeatureIdsArrayPath.getDataContainerName(), getCellFeatureAttributeMatrixName(), getFeaturePhasesArrayName());
   m_FeaturePhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
-      this, tempPath, 0, cDims);                 /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_FeaturePhasesPtr.lock())       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+      this, tempPath, 0, cDims);           /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeaturePhasesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -248,18 +249,33 @@ void FeatureInfoReader::dataCheck()
   cDims[0] = 3;
   tempPath.update(m_FeatureIdsArrayPath.getDataContainerName(), getCellFeatureAttributeMatrixName(), getFeatureEulerAnglesArrayName());
   m_FeatureEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
-      this, tempPath, 0, cDims);                      /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_FeatureEulerAnglesPtr.lock())       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+      this, tempPath, 0, cDims);                /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_FeatureEulerAnglesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_FeatureEulerAngles = m_FeatureEulerAnglesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  if (getDelimiter() < 0 || getDelimiter() > 4)
+  switch(getDelimiterChoice())
   {
-    setErrorCondition(-10001);
-    notifyErrorMessage(getHumanLabel(), "The dilimiter can only have values of 0,1,2,3,4", getErrorCondition());
+  case SIMPL::DelimiterTypes::Type::Comma:
+    setDelimiter(',');
+    break;
+  case SIMPL::DelimiterTypes::Type::Semicolon:
+    setDelimiter(';');
+    break;
+  case SIMPL::DelimiterTypes::Type::Colon:
+    setDelimiter(':');
+    break;
+  case SIMPL::DelimiterTypes::Type::Tab:
+    setDelimiter('\t');
+    break;
+  case SIMPL::DelimiterTypes::Type::Space:
+    setDelimiter(' ');
+    break;
+  default:
+    setDelimiter(',');
+    break;
   }
-
 }
 
 // -----------------------------------------------------------------------------
@@ -303,7 +319,7 @@ int32_t FeatureInfoReader::readFile()
   inStream.setFileName(getInputFile());
   inStream.open(QFile::ReadOnly);
   int32_t lineNum = 0;
-  
+
   if(!inStream.isOpen())
   {
     QString ss = QObject::tr("Error opening input file: %1").arg(getInputFile());
@@ -318,7 +334,7 @@ int32_t FeatureInfoReader::readFile()
   float ea1 = 0.0f, ea2 = 0.0f, ea3 = 0.0f;
   QByteArray buf = inStream.readLine();
   buf = buf.trimmed();
-  while (buf.at(0) == '#')
+  while(buf.at(0) == '#')
   {
     buf = inStream.readLine();
     buf = buf.trimmed();
@@ -356,12 +372,12 @@ int32_t FeatureInfoReader::readFile()
   QVector<size_t> tDims(1, static_cast<size_t>(numfeatures + 1));
   cellFeatureAttrMat->setTupleDimensions(tDims);
   updateFeatureInstancePointers();
-  
+
   QString ss;
   QTextStream errStream(&ss);
-  
+
   for(int32_t i = 0; i < numfeatures; i++)
-  { 
+  {
     buf = inStream.readLine();
     lineNum++;
     buf = buf.trimmed();
@@ -371,37 +387,13 @@ int32_t FeatureInfoReader::readFile()
       continue;
     }
 
-    char d;
+    QList<QByteArray> tokens = buf.split(getDelimiter()); // Split into tokens
 
-    switch (m_Delimiter)
-    {
-      case 0:
-        d = ',';
-        break;
-      case 1:
-        d = ';';
-        break;
-      case 2:
-        d = ':';
-        break;
-      case 3:
-        d = '\t';
-        break;
-      case 4:
-        d = ' ';
-        break;
-      default:
-        d = ',';
-        break;
-    }
-
-    QList<QByteArray> tokens = buf.split(d); // Split into tokens
-    
     if(tokens.size() != 5)
     {
       setErrorCondition(-68001);
       ss.clear();
-      errStream << "There are not enough values at line "<< lineNum << ". 5 values are required";
+      errStream << "There are not enough values at line " << lineNum << ". 5 values are required";
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return getErrorCondition();
     }
@@ -563,4 +555,24 @@ const QString FeatureInfoReader::getSubGroupName() const
 const QString FeatureInfoReader::getHumanLabel() const
 {
   return "Import Feature Info File";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int FeatureInfoReader::getDelimiterChoiceInt() const
+{
+  return static_cast<int>(this->m_DelimiterChoice);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FeatureInfoReader::setDelimiterChoiceInt(const int& value)
+{
+  // Allowed integer values of the enum SIMPL::DelimiterTypes::Type; see defintion in Constants.h
+  if(value >= 0 && value <= 4)
+  {
+    this->m_DelimiterChoice = static_cast<SIMPL::DelimiterTypes::Type>(value);
+  }
 }

@@ -20,7 +20,7 @@ formatted data listing the:
 Currently, only the **Ensemble** Id and Euler angle information can be 
 read using this **Filter**.
 
-Values **MUST** be seperated by a _SPACE_ character.
+Values **MUST** be seperated by a _COMMA_, _SEMICOLON_, _COLON_, _TAB_, or _SPACE_ character.
 
 Comment lines in the file **MUST** have '#' as the first character of the line. Comments
 can be anywhere in the file.
@@ -65,6 +65,7 @@ Note the use of the comments to add more verbosity to the file. The comment line
 | Input Feature Info File | File Path | The input file path |
 | Create Element Level Arrays | bool | Whether to create **Element** level arrays for the imported data |
 | Renumber Features | bool | Whether to randomly shuffle the Feature Ids |
+| Delimiter | char | The delimiter character used to parse the file |
 
 ## Required Geometry ##
 
