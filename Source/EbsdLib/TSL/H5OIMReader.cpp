@@ -131,7 +131,7 @@ int H5OIMReader::readFile()
     setErrorMessage(str);
     return getErrorCode();
   }
-  sentinel.addGroupId(&gid);
+  sentinel.addGroupID(&gid);
 
   hid_t ebsdGid = H5Gopen(gid, Ebsd::H5OIM::EBSD.toLatin1().data(), H5P_DEFAULT);
   if(ebsdGid < 0)
@@ -143,7 +143,7 @@ int H5OIMReader::readFile()
     setErrorMessage(str);
     return getErrorCode();
   }
-  sentinel.addGroupId(&ebsdGid);
+  sentinel.addGroupID(&ebsdGid);
 
   // Read all the header information
   err = readHeader(ebsdGid);
@@ -230,7 +230,7 @@ int H5OIMReader::readHeaderOnly()
   if(m_HDF5Path.isEmpty())
   {
     QStringList names;
-    err = QH5Utilities::getGroupObjects(fileId, H5Utilities::H5Support_GROUP, names);
+    err = QH5Utilities::getGroupObjects(fileId, static_cast<int32_t>(H5Utilities::CustomHDFDataTypes::Group), names);
 
     QString str;
     QTextStream ss(&str);
@@ -265,7 +265,7 @@ int H5OIMReader::readHeaderOnly()
     setErrorMessage(str);
     return getErrorCode();
   }
-  sentinel.addGroupId(&gid);
+  sentinel.addGroupID(&gid);
 
   hid_t ebsdGid = H5Gopen(gid, Ebsd::H5OIM::EBSD.toLatin1().data(), H5P_DEFAULT);
   if(ebsdGid < 0)
@@ -274,7 +274,7 @@ int H5OIMReader::readHeaderOnly()
     setErrorCode(-90007);
     return getErrorCode();
   }
-  sentinel.addGroupId(&ebsdGid);
+  sentinel.addGroupID(&ebsdGid);
 
   err = readHeader(ebsdGid);
 
@@ -339,7 +339,7 @@ int H5OIMReader::readScanNames(QStringList& names)
   }
   H5ScopedFileSentinel sentinel(&fileId, false);
 
-  err = QH5Utilities::getGroupObjects(fileId, H5Utilities::H5Support_GROUP, names);
+  err = QH5Utilities::getGroupObjects(fileId, static_cast<int32_t>(H5Utilities::CustomHDFDataTypes::Group), names);
   setErrorCode(err);
   return err;
 }
@@ -371,7 +371,7 @@ int H5OIMReader::readHeader(hid_t parId)
     setErrorMessage("H5OIMReader Error: Could not open 'Pattern Center Calibration' Group");
     return -1;
   }
-  sentinel.addGroupId(&patternCenterCalibrationGid);
+  sentinel.addGroupID(&patternCenterCalibrationGid);
   ReadH5EbsdHeaderData<H5OIMReader, float, AngHeaderFloatType>(this, Ebsd::Ang::XStar, patternCenterCalibrationGid, m_HeaderMap);
   ReadH5EbsdHeaderData<H5OIMReader, float, AngHeaderFloatType>(this, Ebsd::Ang::YStar, patternCenterCalibrationGid, m_HeaderMap);
   ReadH5EbsdHeaderData<H5OIMReader, float, AngHeaderFloatType>(this, Ebsd::Ang::ZStar, patternCenterCalibrationGid, m_HeaderMap);
@@ -419,10 +419,10 @@ int H5OIMReader::readHeader(hid_t parId)
     H5Gclose(gid);
     return getErrorCode();
   }
-  sentinel.addGroupId(&phasesGid);
+  sentinel.addGroupID(&phasesGid);
 
   QStringList names;
-  err = QH5Utilities::getGroupObjects(phasesGid, H5Utilities::H5Support_GROUP, names);
+  err = QH5Utilities::getGroupObjects(phasesGid, static_cast<int32_t>(H5Utilities::CustomHDFDataTypes::Group), names);
   if(err < 0 || names.empty())
   {
     setErrorCode(-90009);
@@ -471,7 +471,8 @@ int H5OIMReader::readHeader(hid_t parId)
     /* The 'Categories' header may actually be missing from certain types of .ang files */
     if(QH5Lite::datasetExists(pid, Ebsd::Ang::Categories))
     {
-      READ_PHASE_HEADER_ARRAY("H5OIMReader", pid, int, Ebsd::Ang::Categories, Categories, currentPhase)
+      std::string categoriesString = Ebsd::Ang::Categories.toStdString();
+      READ_PHASE_HEADER_ARRAY("H5OIMReader", pid, int, categoriesString, Categories, currentPhase)
     }
     phaseVector.push_back(currentPhase);
     err = H5Gclose(pid);

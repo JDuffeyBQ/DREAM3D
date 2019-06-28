@@ -245,7 +245,7 @@ int H5EspritReader::readFile()
     setErrorMessage(str);
     return getErrorCode();
   }
-  sentinel.addGroupId(&gid);
+  sentinel.addGroupID(&gid);
 
   hid_t ebsdGid = H5Gopen(gid, Ebsd::H5Esprit::EBSD.toLatin1().data(), H5P_DEFAULT);
   if(ebsdGid < 0)
@@ -257,7 +257,7 @@ int H5EspritReader::readFile()
     setErrorMessage(str);
     return getErrorCode();
   }
-  sentinel.addGroupId(&ebsdGid);
+  sentinel.addGroupID(&ebsdGid);
 
   // Read all the header information
   err = readHeader(ebsdGid);
@@ -351,7 +351,7 @@ int H5EspritReader::readHeaderOnly()
     setErrorMessage(str);
     return getErrorCode();
   }
-  sentinel.addGroupId(&gid);
+  sentinel.addGroupID(&gid);
 
   hid_t ebsdGid = H5Gopen(gid, Ebsd::H5Esprit::EBSD.toLatin1().data(), H5P_DEFAULT);
   if(ebsdGid < 0)
@@ -363,7 +363,7 @@ int H5EspritReader::readHeaderOnly()
     setErrorMessage(str);
     return getErrorCode();
   }
-  sentinel.addGroupId(&ebsdGid);
+  sentinel.addGroupID(&ebsdGid);
 
   // Read all the header information
   err = readHeader(ebsdGid);
@@ -406,7 +406,7 @@ int H5EspritReader::readScanNames(QStringList& names)
   }
   H5ScopedFileSentinel sentinel(&fileId, false);
 
-  int32_t err = QH5Utilities::getGroupObjects(fileId, H5Utilities::H5Support_GROUP, names);
+  int32_t err = QH5Utilities::getGroupObjects(fileId, static_cast<int32_t>(H5Utilities::CustomHDFDataTypes::Group), names);
   setErrorCode(err);
   return err;
 }
@@ -505,10 +505,10 @@ int H5EspritReader::readHeader(hid_t parId)
     H5Gclose(gid);
     return getErrorCode();
   }
-  sentinel.addGroupId(&phasesGid);
+  sentinel.addGroupID(&phasesGid);
 
   QStringList names;
-  err = QH5Utilities::getGroupObjects(phasesGid, H5Utilities::H5Support_GROUP, names);
+  err = QH5Utilities::getGroupObjects(phasesGid, static_cast<int32_t>(H5Utilities::CustomHDFDataTypes::Group), names);
   if(err < 0 || names.empty())
   {
     setErrorCode(-90009);
@@ -530,7 +530,9 @@ int H5EspritReader::readHeader(hid_t parId)
 
     READ_PHASE_HEADER_DATA("H5EspritReader", pid, int32_t, Ebsd::H5Esprit::IT, IT, currentPhase)
 
-    READ_PHASE_HEADER_ARRAY("H5EspritReader", pid, float, Ebsd::H5Esprit::LatticeConstants, LatticeConstants, currentPhase);
+    std::string latticeConstantsString = Ebsd::H5Esprit::LatticeConstants.toStdString();
+
+    READ_PHASE_HEADER_ARRAY("H5EspritReader", pid, float, latticeConstantsString, LatticeConstants, currentPhase);
 
     READ_PHASE_STRING_DATA("H5EspritReader", pid, Ebsd::H5Esprit::Name, Name, currentPhase)
 

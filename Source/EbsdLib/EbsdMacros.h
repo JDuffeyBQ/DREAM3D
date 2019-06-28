@@ -136,11 +136,11 @@
 #define READ_PHASE_HEADER_ARRAY(cname, pid, Type, fqKey, key, phase)                                                                                                                                   \
   {                                                                                                                                                                                                    \
     std::vector<Type> t;                                                                                                                                                                               \
-    err = QH5Lite::readVectorDataset(pid, fqKey, t);                                                                                                                                                   \
+    err = H5Lite::readVectorDataset(pid, fqKey, t);                                                                                                                                                   \
     if(err < 0)                                                                                                                                                                                        \
     {                                                                                                                                                                                                  \
       QString ss =                                                                                                                                                                                     \
-          QObject::tr("%1: The header value for '%2' was not found in the H5EBSD file. Was this header originally found in the files that were imported into this H5EBSD File?").arg(cname, fqKey);    \
+          QObject::tr("%1: The header value for '%2' was not found in the H5EBSD file. Was this header originally found in the files that were imported into this H5EBSD File?").arg(cname, QString::fromStdString(fqKey));    \
       setErrorCode(-90006);                                                                                                                                                                            \
       setErrorMessage(ss);                                                                                                                                                                             \
       err = H5Gclose(pid);                                                                                                                                                                             \

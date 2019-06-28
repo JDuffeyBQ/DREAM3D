@@ -630,7 +630,7 @@ Ebsd::OEM ImportH5OimData::readManufacturer() const
   H5ScopedFileSentinel sentinel(&fid, false);
   QString dsetName;
   std::list<std::string> names;
-  herr_t err = H5Utilities::getGroupObjects(fid, H5Utilities::H5Support_ANY, names);
+  herr_t err = H5Utilities::getGroupObjects(fid, static_cast<int32_t>(H5Utilities::CustomHDFDataTypes::Any), names);
   auto findIter = std::find(names.begin(), names.end(), Ebsd::H5OIM::Manufacturer.toStdString());
   if(findIter != names.end())
   {

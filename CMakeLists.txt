@@ -157,6 +157,8 @@ endif()
 
 include(CMakeParseArguments)
 
+find_package(H5Support REQUIRED)
+
 #------------------------------------------------------------------------------
 # If we have not defined a "BrandedSIMPLView_DIR" then define it to the default
 # generic set of ICONs. Needs to be defined BEFORE we setup the SIMPLView project

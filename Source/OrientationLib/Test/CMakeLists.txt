@@ -57,7 +57,7 @@ configure_file(${SIMPLProj_SOURCE_DIR}/Resources/UnitTestSupport.hpp
 
 
 
-set(OrientationLib_Link_Libs Qt5::Core H5Support SIMPLib OrientationLib)
+set(OrientationLib_Link_Libs Qt5::Core H5Support::H5Support SIMPLib OrientationLib)
 
 
 #------------------------------------------------------------------------------

@@ -160,7 +160,7 @@ int H5AngReader::readHeaderOnly()
     err = QH5Utilities::closeFile(fileId);
     return -1;
   }
-  sentinel.addGroupId(&gid);
+  sentinel.addGroupID(&gid);
 
   // Read all the header information
   err = readHeader(gid);
@@ -206,7 +206,7 @@ int H5AngReader::readHeader(hid_t parId)
   }
 
   QStringList names;
-  err = QH5Utilities::getGroupObjects(phasesGid, H5Utilities::H5Support_GROUP, names);
+  err = QH5Utilities::getGroupObjects(phasesGid, static_cast<int32_t>(H5Utilities::CustomHDFDataTypes::Group), names);
   if(err < 0 || names.empty())
   {
     setErrorCode(-90009);
@@ -227,7 +227,8 @@ int H5AngReader::readHeader(hid_t parId)
     READ_PHASE_STRING_DATA("H5AngReader", pid, Ebsd::Ang::Formula, Formula, m_CurrentPhase)
     READ_PHASE_STRING_DATA("H5AngReader", pid, Ebsd::Ang::Info, Info, m_CurrentPhase)
     READ_PHASE_HEADER_DATA_CAST("H5AngReader", pid, uint32_t, int, Ebsd::Ang::Symmetry, Symmetry, m_CurrentPhase)
-    READ_PHASE_HEADER_ARRAY("H5AngReader", pid, float, Ebsd::Ang::LatticeConstants, LatticeConstants, m_CurrentPhase)
+    std::string latticeConstantsString = Ebsd::Ang::LatticeConstants.toStdString();
+    READ_PHASE_HEADER_ARRAY("H5AngReader", pid, float, latticeConstantsString, LatticeConstants, m_CurrentPhase)
     READ_PHASE_HEADER_DATA("H5AngReader", pid, int, Ebsd::Ang::NumberFamilies, NumberFamilies, m_CurrentPhase)
 
     if (m_CurrentPhase->getNumberFamilies() > 0)
@@ -243,7 +244,8 @@ int H5AngReader::readHeader(hid_t parId)
     /* The 'Categories' header may actually be missing from certain types of .ang files */
     if(QH5Lite::datasetExists(pid, Ebsd::Ang::Categories))
     {
-      READ_PHASE_HEADER_ARRAY("H5AngReader", pid, int, Ebsd::Ang::Categories, Categories, m_CurrentPhase)
+      std::string categoriesString = Ebsd::Ang::Categories.toStdString();
+      READ_PHASE_HEADER_ARRAY("H5AngReader", pid, int, categoriesString, Categories, m_CurrentPhase)
     }
     m_Phases.push_back(m_CurrentPhase);
     err = H5Gclose(pid);

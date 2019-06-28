@@ -172,7 +172,7 @@ int H5CtfReader::readHeaderOnly()
     err = QH5Utilities::closeFile(fileId);
     return -1;
   }
-  sentinel.addGroupId(&gid);
+  sentinel.addGroupID(&gid);
 
   // Read all the header information
   err = readHeader(gid);
@@ -262,7 +262,7 @@ int H5CtfReader::readHeader(hid_t parId)
   }
 
   QList<QString> names;
-  err = QH5Utilities::getGroupObjects(phasesGid, H5Utilities::H5Support_GROUP, names);
+  err = QH5Utilities::getGroupObjects(phasesGid, static_cast<int32_t>(H5Utilities::CustomHDFDataTypes::Group), names);
   if(err < 0 || names.empty())
   {
     setErrorCode(-90009);
@@ -278,8 +278,9 @@ int H5CtfReader::readHeader(hid_t parId)
   {
     hid_t pid = H5Gopen(phasesGid, phaseGroupName.toLatin1().data(), H5P_DEFAULT);
     CtfPhase::Pointer m_CurrentPhase = CtfPhase::New();
+    std::string latticeConstantsString = Ebsd::Ctf::LatticeConstants.toStdString();
 
-    READ_PHASE_HEADER_ARRAY("H5CtfReader", pid, float, Ebsd::Ctf::LatticeConstants, LatticeConstants, m_CurrentPhase);
+    READ_PHASE_HEADER_ARRAY("H5CtfReader", pid, float, latticeConstantsString, LatticeConstants, m_CurrentPhase);
     READ_PHASE_STRING_DATA("H5CtfReader", pid, Ebsd::Ctf::PhaseName, PhaseName, m_CurrentPhase)
     READ_PHASE_HEADER_DATA_CAST("H5CtfReader", pid, Ebsd::Ctf::LaueGroupTable, int, Ebsd::Ctf::LaueGroup, LaueGroup, m_CurrentPhase)
     READ_PHASE_HEADER_DATA_CAST("H5CtfReader", pid, int, int, Ebsd::Ctf::SpaceGroup, SpaceGroup, m_CurrentPhase)

@@ -223,7 +223,7 @@ set(EBSDLib_LINK_LIBRARIES "")
 if(${EbsdLib_ENABLE_HDF5})
 	set(EBSDLib_LINK_LIBRARIES
 		${EBSDLib_LINK_LIBRARIES}
-		  H5Support
+		  H5Support::H5Support
 		)
   target_compile_definitions(${PROJECT_NAME} PRIVATE -DEbsdLib_HAVE_HDF5)
 endif()
@@ -240,7 +240,7 @@ if(WIN32 AND BUILD_SHARED_LIBS)
 endif()
 	
 LibraryProperties( ${PROJECT_NAME} ${EXE_DEBUG_EXTENSION} )
-target_link_libraries(${PROJECT_NAME} ${EBSDLib_LINK_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${EBSDLib_LINK_LIBRARIES} SIMPLib)
 
 
 set(install_dir "tools")
