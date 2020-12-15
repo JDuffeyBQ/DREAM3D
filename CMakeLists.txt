@@ -389,6 +389,18 @@ set(DREAM3D_DOCS_ROOT_DIR "${DREAM3DProj_BINARY_DIR}/Bin/Help/DREAM3D")
 # developer has added.
 include(${PROJECT_CODE_DIR}/Plugins/Plugins.cmake)
 
+option(DREAM3D_REQUIRE_PLUGINS_BEFORE_MODULES "Forces all plugins to be built before Python modules" OFF)
+
+if(DREAM3D_REQUIRE_PLUGINS_BEFORE_MODULES)
+  add_custom_target(Plugins ALL)
+
+  foreach(d3dPlugin ${DREAM3D_ALL_PLUGINS})
+    add_dependencies(Plugins ${d3dPlugin}Server)
+    string(TOLOWER ${d3dPlugin} module)
+    add_dependencies(${module} Plugins)
+  endforeach()
+endif()
+
 # add the Command line utilities
 # Figure out here if we are going to build the command line tools
 option(SIMPL_BUILD_CLI_TOOLS "Build the command line versions of the applications" ON)
