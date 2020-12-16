@@ -392,12 +392,15 @@ include(${PROJECT_CODE_DIR}/Plugins/Plugins.cmake)
 option(DREAM3D_REQUIRE_PLUGINS_BEFORE_MODULES "Forces all plugins to be built before Python modules" OFF)
 
 if(DREAM3D_REQUIRE_PLUGINS_BEFORE_MODULES)
+  message(FATAL_ERROR ${DREAM3D_ALL_PLUGINS})
   add_custom_target(Plugins ALL)
 
   foreach(d3dPlugin ${DREAM3D_ALL_PLUGINS})
-    add_dependencies(Plugins ${d3dPlugin}Server)
-    string(TOLOWER ${d3dPlugin} module)
-    add_dependencies(${module} Plugins)
+    if(DREAM3D_ENABLE_${d3dPlugin})
+      add_dependencies(Plugins ${d3dPlugin}Server ${d3dPlugin}Gui ${d3dPlugin}UnitTest)
+      string(TOLOWER ${d3dPlugin} module)
+      add_dependencies(${module} Plugins)
+    endif()
   endforeach()
 endif()
 
