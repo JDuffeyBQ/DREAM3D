@@ -4,14 +4,13 @@ Pipeline example based on Edax_IPF_Colors
 
 import numpy as np
 
-import simpl
-import simplpy
+from dream3d import simpl
+from dream3d import simplpy
+from dream3d import orientationanalysispy
+from dream3d import itkimageprocessing
+from dream3d import itkimageprocessingpy
 import simpl_helpers as sh
 import simpl_test_dirs as sd
-import orientationanalysispy
-import samplingpy
-import itkimageprocessing
-import itkimageprocessingpy
 
 def color_data_change_test():
     # Create Data Container Array

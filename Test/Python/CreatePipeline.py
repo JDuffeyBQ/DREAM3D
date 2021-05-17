@@ -8,16 +8,11 @@ This example also shows reading in a pipeline from a file and executing that pip
 ** IMPORTANT: If you are blindly reading a pipeline from a file then you should also be
 ** importing all of the modules.
 '''
-import numpy as np
 
-import simpl
-import simplpy as d3d
-import simpl_helpers as sh
+from dream3d import simpl
+from dream3d import orientationanalysis
+from dream3d import itkimageprocessing
 import simpl_test_dirs as sd
-
-import orientationanalysis
-import orientationanalysispy
-import itkimageprocessing
 
 def CreatePipeline():
     print('======== Construct Pipeline')

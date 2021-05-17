@@ -4,12 +4,11 @@
 
 # These are the simpl_py python modules
 
-import simpl
-import simplpy
+from dream3d import simpl
+from dream3d import simplpy
+from dream3d import orientationanalysispy as orientationanalysis
 import simpl_helpers as sh
 import simpl_test_dirs as sd
-import orientationanalysispy as orientationanalysis
-import samplingpy as sampling
 
 def export_small_in100_odf_data():
     run_pipeline = False

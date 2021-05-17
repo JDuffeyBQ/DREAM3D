@@ -2,8 +2,8 @@
 #
 #
 
-import simpl
-import simplpy as d3d
+from dream3d import simpl
+from dream3d import simplpy as d3d
 import simpl_helpers as sh
 import simpl_test_dirs as sd
 

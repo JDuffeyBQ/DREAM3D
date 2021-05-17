@@ -2,11 +2,11 @@
 # 
 # These are the simpl_py python modules
 
-import simpl
+from dream3d import simpl
+from dream3d import itkimageprocessing
+from dream3d import itkimageprocessingpy
 import simpl_helpers as sh
 import simpl_test_dirs as sd
-import itkimageprocessing
-import itkimageprocessingpy
 
 def image_initial_visualization():
     # Create Data Container Array

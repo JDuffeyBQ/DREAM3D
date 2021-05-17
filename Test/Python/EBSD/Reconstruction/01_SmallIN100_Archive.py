@@ -2,9 +2,9 @@
 #
 #
 
-import simpl
+from dream3d import simpl
+from dream3d import orientationanalysispy as orientation_analysis
 import simpl_test_dirs as sd
-import orientationanalysispy as orientation_analysis
 
 def small_in100_archive():
     # Create Data Container Array

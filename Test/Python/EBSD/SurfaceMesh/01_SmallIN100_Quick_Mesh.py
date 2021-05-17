@@ -1,11 +1,10 @@
 # Pipeline : (01) SmallIN100 Quick Mesh (from EBSD Surface Meshing)
 
-import simpl
-import simplpy as d3d
+from dream3d import simpl
+from dream3d import samplingpy as sampling
+from dream3d import surfacemeshingpy as surfacemeshing
 import simpl_helpers as sh
 import simpl_test_dirs as sd
-import samplingpy as sampling
-import surfacemeshingpy as surfacemeshing
 
 def small_in100_quickmesh():
     # Create Data Container Array

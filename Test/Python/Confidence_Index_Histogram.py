@@ -2,13 +2,12 @@
 # 
 
 # These are the simpl_py python modules
-import simpl
-import simplpy
+from dream3d import simpl
+from dream3d import simplpy
+from dream3d import orientationanalysispy
+from dream3d import statisticspy
 import simpl_helpers as sh
 import simpl_test_dirs as sd
-import orientationanalysispy
-import statisticspy
-import samplingpy
 
 def confidence_index_histogram_test():
     # Create Data Container Array

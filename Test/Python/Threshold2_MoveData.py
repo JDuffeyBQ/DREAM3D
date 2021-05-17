@@ -3,12 +3,11 @@
 
 # These are the simpl_py python modules
 
-import simpl
-import simplpy
+from dream3d import simpl
+from dream3d import simplpy
+from dream3d import orientationanalysispy as orientationanalysis
 import simpl_helpers as sh
 import simpl_test_dirs as sd
-import orientationanalysispy as orientationanalysis
-import samplingpy as sampling
 
 def threshold2_move_data_test():
     # Create Data Container Array

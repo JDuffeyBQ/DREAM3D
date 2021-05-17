@@ -2,13 +2,13 @@
 Pipeline example based on Import_ASCII
 '''
 
-import simpl
-import simplpy
+from dream3d import simpl
+from dream3d import simplpy
+from dream3d import orientationanalysispy
+from dream3d import itkimageprocessing
+from dream3d import itkimageprocessingpy
 import simpl_helpers as sh
 import simpl_test_dirs as sd
-import orientationanalysispy
-import itkimageprocessing
-import itkimageprocessingpy
 
 def import_ascii():
     # Create Data Container Array

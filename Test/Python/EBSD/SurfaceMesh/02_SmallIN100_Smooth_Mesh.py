@@ -1,10 +1,9 @@
 # Pipeline : (02) SmallIN100 Smooth Mesh (from EBSD Surface Meshing)
 
-import simpl
-import simplpy as d3d
+from dream3d import simpl
+from dream3d import surfacemeshingpy as surfacemeshing
 import simpl_helpers as sh
 import simpl_test_dirs as sd
-import surfacemeshingpy as surfacemeshing
 
 def small_in100_smoothmesh():
     # Create Data Container Array

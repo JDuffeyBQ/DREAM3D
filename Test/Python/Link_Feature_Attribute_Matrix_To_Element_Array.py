@@ -1,12 +1,12 @@
 # Pipeline : Link Feature Attribute Matrix to Element Attribute Array Filter Test
 # Based on (01) SmallIN100 Morphological Statistics (from EBSD Statistics)
 
-import simpl
-import simplpy
+from dream3d import simpl
+from dream3d import simplpy
+from dream3d import genericpy as generic
+from dream3d import statisticspy as statistics
 import simpl_helpers as sh
 import simpl_test_dirs as sd
-import genericpy as generic
-import statisticspy as statistics
 
 def link_feature_map_to_element_array_test():
     # Create Data Container Array

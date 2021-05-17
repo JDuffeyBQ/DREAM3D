@@ -2,11 +2,10 @@
 #
 #
 
-import simpl
-import simplpy as d3d
+from dream3d import simpl
+from dream3d import reconstructionpy as reconstruction
 import simpl_helpers as sh
 import simpl_test_dirs as sd
-import reconstructionpy as reconstruction
 
 def small_in100_segmentation():
     # Create Data Container Array

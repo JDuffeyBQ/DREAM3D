@@ -2,12 +2,12 @@
 Pipeline example based on Image_Histogram
 '''
 
-import simpl
-import simplpy
+from dream3d import simpl
+from dream3d import simplpy
+from dream3d import statisticspy
+from dream3d import itkimageprocessing
+from dream3d import itkimageprocessingpy
 import simpl_test_dirs as sd
-import statisticspy
-import itkimageprocessing
-import itkimageprocessingpy
 
 def image_histogram():
     # Create Data Container Array

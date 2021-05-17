@@ -3,14 +3,13 @@ Pipeline example based on Small IN100 Synthetic where IPF Color values are chang
 using Numpy and re-added to the attribute matrix
 '''
 
-import simpl
-import simplpy
+from dream3d import simpl
+from dream3d import simplpy
+from dream3d import orientationanalysispy
+from dream3d import itkimageprocessing
+from dream3d import itkimageprocessingpy
 import simpl_helpers as sh
 import simpl_test_dirs as sd
-import orientationanalysispy
-import samplingpy
-import itkimageprocessing
-import itkimageprocessingpy
 
 import numpy as np
 

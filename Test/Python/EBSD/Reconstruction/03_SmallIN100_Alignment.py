@@ -2,14 +2,14 @@
 #
 #
 
-import simpl
-import simplpy as d3d
+from dream3d import simpl
+from dream3d import simplpy as d3d
+from dream3d import orientationanalysispy as orientation_analysis
+from dream3d import reconstructionpy as reconstruction
+from dream3d import processingpy as processing
+from dream3d import orientationanalysis
 import simpl_helpers as sh
 import simpl_test_dirs as sd
-import orientationanalysispy as orientation_analysis
-import reconstructionpy as reconstruction
-import processingpy as processing
-import orientationanalysis
 
 def small_in100_alignment():
     # Create Data Container Array

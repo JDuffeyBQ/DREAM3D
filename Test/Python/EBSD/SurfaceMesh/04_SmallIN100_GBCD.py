@@ -1,11 +1,10 @@
 # Pipeline : (04) SmallIN100 GBCD (from EBSD Surface Meshing)
 
-import simpl
-import simplpy as d3d
+from dream3d import simpl
+from dream3d import orientationanalysispy as orientationanalysis
+from dream3d import importexportpy
 import simpl_helpers as sh
 import simpl_test_dirs as sd
-import orientationanalysispy as orientationanalysis
-import importexportpy
 
 def small_in100_gbcd():
     # Create Data Container Array

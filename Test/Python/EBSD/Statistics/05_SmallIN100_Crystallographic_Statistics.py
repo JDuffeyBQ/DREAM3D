@@ -1,10 +1,9 @@
 # Pipeline : (05) SmallIN100 Crystallographic Statistics (from EBSD Statistics)
 
-import simpl
-import simplpy as d3d
+from dream3d import simpl
+from dream3d import orientationanalysispy as orientation_analysis
 import simpl_helpers as sh
 import simpl_test_dirs as sd
-import orientationanalysispy as orientation_analysis
 
 def small_in100_cryst_stats():
     # Create Data Container Array

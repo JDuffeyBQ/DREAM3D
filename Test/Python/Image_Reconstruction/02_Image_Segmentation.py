@@ -2,16 +2,16 @@
 # 
 # These are the simpl_py python modules
 
-import simpl
-import simplpy
+from dream3d import simpl
+from dream3d import simplpy
+from dream3d import itkimageprocessing
+from dream3d import itkimageprocessingpy
+from dream3d import reconstructionpy
+from dream3d import statisticspy
+from dream3d import genericpy
+from dream3d import orientationanalysispy
 import simpl_helpers as sh
 import simpl_test_dirs as sd
-import itkimageprocessing
-import itkimageprocessingpy
-import reconstructionpy
-import statisticspy
-import genericpy
-import orientationanalysispy
 
 '''
 Pipeline Annotation:

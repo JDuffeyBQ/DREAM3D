@@ -1,11 +1,11 @@
 # Pipeline : (01) SmallIN100 Morphological Statistics (from EBSD Statistics)
 
-import simpl
-import simplpy as d3d
+from dream3d import simpl
+from dream3d import simplpy as d3d
+from dream3d import genericpy as generic
+from dream3d import statisticspy as statistics
 import simpl_helpers as sh
 import simpl_test_dirs as sd
-import genericpy as generic
-import statisticspy as statistics
 
 def small_in100_morph_stats():
     # Create Data Container Array

@@ -4,16 +4,13 @@ each slice of data. As each filter is instantiated in the loop the filter is exe
 We are not building up a pipeline and then executing that pipeline.
 '''
 
-import numpy as np
-
-import simpl
-import simplpy
+from dream3d import simpl
+from dream3d import simplpy
+from dream3d import orientationanalysispy
+from dream3d import itkimageprocessing
+from dream3d import itkimageprocessingpy
 import simpl_helpers as sh
 import simpl_test_dirs as sd
-import orientationanalysispy
-import samplingpy
-import itkimageprocessing
-import itkimageprocessingpy
 
 def batch_process():
 

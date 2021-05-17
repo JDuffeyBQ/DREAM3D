@@ -1,7 +1,7 @@
 # Pipeline : (02) SmallIN100 Export Statistics (from EBSD Statistics)
 
-import simpl
-import simplpy as d3d
+from dream3d import simpl
+from dream3d import simplpy as d3d
 import simpl_test_dirs as sd
 import simpl_helpers as sh
 

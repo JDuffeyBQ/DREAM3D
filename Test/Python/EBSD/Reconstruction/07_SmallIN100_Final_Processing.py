@@ -2,11 +2,10 @@
 #
 #
 
-import simpl
-import simplpy as d3d
+from dream3d import simpl
+from dream3d import processingpy as processing
 import simpl_helpers as sh
 import simpl_test_dirs as sd
-import processingpy as processing
 
 def small_in100_final_processing():
     # Create Data Container Array

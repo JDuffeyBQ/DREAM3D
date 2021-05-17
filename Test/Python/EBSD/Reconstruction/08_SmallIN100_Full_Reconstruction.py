@@ -1,14 +1,14 @@
 # Pipeline : (08) SmallIN100 Full Reconstruction (from EBSD Reconstruction)
 
-import simpl
-import simplpy as d3d
+from dream3d import simpl
+from dream3d import simplpy as d3d
+from dream3d import orientationanalysispy as orientation_analysis
+from dream3d import reconstructionpy as reconstruction
+from dream3d import processingpy as processing
+from dream3d import genericpy as generic
+from dream3d import statisticspy as statistics
 import simpl_helpers as sh
 import simpl_test_dirs as sd
-import orientationanalysispy as orientation_analysis
-import reconstructionpy as reconstruction
-import processingpy as processing
-import genericpy as generic
-import statisticspy as statistics
 
 def small_in100_full_reconstruction():
     # Create Data Container Array

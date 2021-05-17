@@ -2,14 +2,14 @@
 (06) Small IN100 Synthetic - Pipeline example in Python
 '''
 
-import simplpy as d3d
-import simpl
+from dream3d import simplpy as d3d
+from dream3d import simpl
+from dream3d import orientationanalysispy as orientationanalysis
+from dream3d import genericpy as generic
+from dream3d import statisticspy as statistics
+from dream3d import syntheticbuildingpy as syntheticbuilding
 import simpl_helpers as sh
 import simpl_test_dirs as sd
-import orientationanalysispy as orientationanalysis
-import genericpy as generic
-import statisticspy as statistics
-import syntheticbuildingpy as syntheticbuilding
 
 import datetime
 

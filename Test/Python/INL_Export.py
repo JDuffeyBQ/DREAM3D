@@ -2,18 +2,17 @@
 # 
 # These are the simpl_py python modules
 
-import simpl
-import simplpy
+from dream3d import simpl
+from dream3d import simplpy
+from dream3d import orientationanalysispy
+from dream3d import processingpy
+from dream3d import reconstructionpy
+from dream3d import genericpy
+from dream3d import statisticspy
+from dream3d import itkimageprocessing
+from dream3d import itkimageprocessingpy
 import simpl_helpers as sh
 import simpl_test_dirs as sd
-import orientationanalysispy
-import samplingpy
-import processingpy
-import reconstructionpy
-import genericpy
-import statisticspy
-import itkimageprocessing
-import itkimageprocessingpy
 
 def inl_export():
     # Create Data Container Array

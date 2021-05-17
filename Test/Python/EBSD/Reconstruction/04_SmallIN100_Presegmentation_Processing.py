@@ -2,11 +2,10 @@
 #
 #
 
-import simpl
-import simplpy as d3d
+from dream3d import simpl
+from dream3d import orientationanalysispy as orientation_analysis
 import simpl_helpers as sh
 import simpl_test_dirs as sd
-import orientationanalysispy as orientation_analysis
 
 def small_in100_presegmentation_processing():
     # Create Data Container Array
