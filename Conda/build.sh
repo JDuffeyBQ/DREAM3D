@@ -33,5 +33,5 @@ cmake --build . --target all
 
 cmake --build . --target install
 
-cd python_package
+cd Bin
 $PYTHON setup.py install

@@ -39,6 +39,6 @@ if errorlevel 1 exit 1
 cmake --build . --target install
 if errorlevel 1 exit 1
 
-cd python_package
+cd Bin
 %PYTHON% setup.py install
 if errorlevel 1 exit 1
